@@ -88,11 +88,6 @@ class App {
     inputType.addEventListener("change", this._toggleElevationField);
 
     containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
-
-    containerWorkouts.addEventListener(
-      "click",
-      this._removeWorkouts.bind(this)
-    );
   }
 
   _getPostion() {
@@ -315,36 +310,6 @@ class App {
   reset() {
     localStorage.removeItem("workouts");
     location.reload();
-  }
-
-  _removeWorkouts(e) {
-    const workoutEl = e.target.closest(".workout");
-    const removeWork = e.target.closest("h2 > button");
-
-    if (!workoutEl) return;
-
-    if (removeWork) {
-      const workout = this.#workout.find(
-        (work) => work.id === workoutEl.dataset.id
-      );
-
-      const keyToUpdate = "workouts"; // Replace "your_key" with the actual key containing the array
-      const valueToRemove = workout.id; // Replace "value_to_remove" with the specific value you want to remove
-
-      //  Retrieve the array from the local storage
-      const storedArray = JSON.parse(localStorage.getItem(keyToUpdate)) || [];
-
-      //  Modify the array to remove the specific value
-      const modifiedArray = storedArray.filter(
-        (value) => value.id !== valueToRemove
-      );
-
-      //  Save the modified array back to the local storage
-      localStorage.setItem(keyToUpdate, JSON.stringify(modifiedArray));
-
-      localStorage.removeItem("");
-      location.reload();
-    }
   }
 }
 
