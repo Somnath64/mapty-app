@@ -87,10 +87,31 @@ a:visited {
 }
 
 .workout__title {
+  position: relative;
   font-size: 1.7rem;
   font-weight: 600;
   grid-column: 1 / -1;
 }
+
+.workout__remove{
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  background-color: var(--color--dark--2);
+  border: none;
+
+}
+.workout__remove--running:hover{
+  background-color: var(--color--brand--2);
+}
+.workout__remove--cycling:hover{
+  background-color: var(--color--brand--1);
+}
+
 
 .workout__details {
   display: flex;

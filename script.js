@@ -86,7 +86,13 @@ class App {
     //Attach event handlers
     form.addEventListener("submit", this._newWorkout.bind(this));
     inputType.addEventListener("change", this._toggleElevationField);
+
     containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
+
+    containerWorkouts.addEventListener(
+      "click",
+      this._removeWorkouts.bind(this)
+    );
   }
 
   _getPostion() {
@@ -163,13 +169,10 @@ class App {
       const cadence = +inputCadence.value;
       // Check if data is valid
       if (
-        // !Number.isFinite(distance) ||
-        // !Number.isFinite(duration) ||
-        // !Number.isFinite(cadence)
         !validInput(distance, duration, cadence) ||
         !allPositive(distance, duration, cadence)
       )
-        return alert("Input have to be positive nmber");
+        return alert("Input have to be positive number");
 
       workout = new Running([lat, lng], distance, duration, cadence);
     }
@@ -182,7 +185,7 @@ class App {
         !validInput(distance, duration, elevation) ||
         !allPositive(distance, duration)
       )
-        return alert("Input have to be positive nmber");
+        return alert("Input have to be positive number");
 
       workout = new Cycling([lat, lng], distance, duration, elevation);
     }
@@ -225,7 +228,9 @@ class App {
   _renderWorkout(workout) {
     let html = `
          <li class="workout workout--${workout.type}" data-id="${workout.id}">
-            <h2 class="workout__title">${workout.description}</h2>
+            <h2 class="workout__title">${workout.description}
+            <button class="workout__remove workout__remove--${workout.type}">X</button>
+            </h2>
             <div class="workout__details">
               <span class="workout__icon">${
                 workout.type === "running" ? "🏃‍♂️" : "🚴‍♀️"
@@ -297,7 +302,7 @@ class App {
 
   _getLocalStorage() {
     const data = JSON.parse(localStorage.getItem("workouts"));
-    // console.log(data);
+   
 
     if (!data) return;
 
@@ -310,6 +315,36 @@ class App {
   reset() {
     localStorage.removeItem("workouts");
     location.reload();
+  }
+
+  _removeWorkouts(e) {
+    const workoutEl = e.target.closest(".workout");
+    const removeWork = e.target.closest("h2 > button");
+
+    if (!workoutEl) return;
+
+    if (removeWork) {
+      const workout = this.#workout.find(
+        (work) => work.id === workoutEl.dataset.id
+      );
+
+      const keyToUpdate = "workouts"; // Replace "your_key" with the actual key containing the array
+      const valueToRemove = workout.id; // Replace "value_to_remove" with the specific value you want to remove
+
+      //  Retrieve the array from the local storage
+      const storedArray = JSON.parse(localStorage.getItem(keyToUpdate)) || [];
+
+      //  Modify the array to remove the specific value
+      const modifiedArray = storedArray.filter(
+        (value) => value.id !== valueToRemove
+      );
+
+      //  Save the modified array back to the local storage
+      localStorage.setItem(keyToUpdate, JSON.stringify(modifiedArray));
+
+      localStorage.removeItem("");
+      location.reload();
+    }
   }
 }
 
